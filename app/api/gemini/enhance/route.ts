@@ -49,8 +49,9 @@ ${currentText}`;
       },
     });
 
+    const model = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model,
       contents: userPrompt,
       config: {
         systemInstruction: systemPrompt,

@@ -62,9 +62,10 @@ GÖREV VE KESİN KURALLAR:
       );
     }
 
-    // Call Gemini API using gemini-2.5-flash
+    // Call Gemini API using gemini-3.6-flash (or GEMINI_MODEL env var)
+    const model = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model,
       contents,
       config: {
         systemInstruction: defaultSystemPrompt,
