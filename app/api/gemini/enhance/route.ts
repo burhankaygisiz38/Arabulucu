@@ -16,16 +16,18 @@ export async function POST(req: NextRequest) {
 
     const systemPrompt = `Sen T.C. Adalet Bakanlığı Arabuluculuk Daire Başkanlığı standartlarına ve 6325 sayılı Hukuk Uyuşmazlıklarında Arabuluculuk Kanunu mevzuatına %100 hakim uzman bir hukukçusun.
 Amacın arabuluculuk evraklarındaki hükümleri (özellikle anlaşma şartları, ibra, feragat, taksitlendirme, icra kabiliyeti vb.) ADB'nin en güncel ve en sağlam hukuki şablonlarına uygun olarak yazmak veya geliştirmektir.
+KESİN KURAL: Asla kendinden uydurma bilgi veya varsayımsal veri (tutar, isim, tarih, IBAN, banka adı vb.) ekleme. Eğer bir bilgi sağlanmamışsa veya eksikse, o kısmı "...." şeklinde bırak.
 Cevaplarında doğrudan resmi evrağa eklenebilecek duru, kesin ve Türk borçlar/iş/ticaret hukukuna tam uyumlu maddeler ve metinler sun.`;
 
     let userPrompt = '';
     if (action === 'generate_agreement_clause') {
       userPrompt = `Şu arabuluculuk uyuşmazlığı ve anlaşma şartları için ADB standartlarında resmi "Anlaşma Şartları, Ödeme Takvimi ve İbra/Feragat Hükmü" oluştur:
-Uyuşmazlık: ${caseData?.disputeSubject || 'İşçilik Alacakları'}
-Anlaşılan Tutar: ${caseData?.anlasmaSartlari?.odenecekTutar || 'Belirtilmemiş'}
-Ödeme Detayı: ${prompt || 'Tek seferde banka havalesi'}
-IBAN: ${caseData?.anlasmaSartlari?.alacakliIban || ''}
-Lütfen doğrudan evrağa yapıştırılmaya hazır 3-4 maddelik resmi hukuki metin üret.`;
+Uyuşmazlık: ${caseData?.disputeSubject || '....'}
+Anlaşılan Tutar: ${caseData?.anlasmaSartlari?.odenecekTutar || '....'}
+Ödeme Detayı: ${prompt || '....'}
+IBAN: ${caseData?.anlasmaSartlari?.alacakliIban || '....'}
+Not: Bilgisi verilmemiş hiçbir alanı kendinden uydurma, eksik bilgileri doğrudan "...." olarak bırak.
+Lütfen doğrudan evrağa yapıştırılmaya hazır resmi hukuki metin üret.`;
     } else if (action === 'refine_text') {
       userPrompt = `Aşağıdaki arabuluculuk tutanak metnini ADB resmi kalıplarına ve 6325 sayılı Kanun'a göre kusursuzlaştır:
 İstek: ${prompt}

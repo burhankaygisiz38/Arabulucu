@@ -24,53 +24,47 @@ export async function POST(req: NextRequest) {
 
     const systemPrompt = `Sen Türkiye Cumhuriyeti Adalet Bakanlığı Arabuluculuk Daire Başkanlığı (ADB) standartlarına, 6325 sayılı Hukuk Uyuşmazlıklarında Arabuluculuk Kanunu'na ve Türk hukuk usullerine tam hakim uzman bir baş arabuluculuk hukuk danışmanısın.
 
-Görevin: Sana sunulan arabuluculuk başvuru belgesi, UYAP görevlendirme yazısı, tensip tutanağı, UDF metni veya dilekçeden şu bilgileri %100 doğrulukla tespit edip yapılandırılmış JSON olarak döndürmektir:
+GÖREV VE KESİN KURALLAR:
+1. KESİNLİKLE KENDİNDEN BİLGİ UYDURMA VEYA TAHMİNİ VERİ EKLEME.
+2. Sana sunulan belgede veya metinde bir bilgi açıkça yer almıyorsa o alanı KESİNLİKLE BOŞ STRING ("") OLARAK BIRAK. Asla varsayımsal tarih, saat, kişi adı, TC/VKN, adres, dosya numarası veya IBAN üretme.
+3. Sadece ve sadece metinde açıkça yazan gerçek verileri tespit et ve aşağıdaki yapılandırılmış JSON formatında döndür:
 
 1. processType: "dava_sarti" veya "ihtiyari"
 2. disputeType: "ihtiyari" | "isci_isveren" | "ticari" | "tasinir_tasinmaz_paylasim" | "diger_dava_sarti" | "tarimsal_uretim" | "tuketici"
-   - "ihtiyari": İhtiyari Arabuluculuk
-   - "isci_isveren": İşçi İşveren (Dava Şartı) (kıdem, ihbar, fazla mesai, ücret, işe iade vb.)
-   - "ticari": Ticari (Dava Şartı) (ticari alacak, fatura, cari hesap, çek-senet, ticari tazminat vb.)
-   - "tasinir_tasinmaz_paylasim": Taşınır ve Taşınmazların Paylaştırılması ve Ortaklığın Giderilmesi (Dava Şartı) (izale-i şüyu, paydaşlık, miras taksimi vb.)
-   - "diger_dava_sarti": Diğer (Dava Şartı) (kira uyuşmazlıkları, kat mülkiyeti, komşuluk hakkı vb.)
-   - "tarimsal_uretim": Tarımsal Üretim Sözleşmesinden Kaynaklanan (Dava Şartı)
-   - "tuketici": Tüketici (Dava Şartı) (ayıplı mal, hizmet, konut tüketici uyuşmazlığı vb.)
-3. disputeSubject: Uyuşmazlık konusu veya talepler (ör: "Kıdem tazminatı, ihbar tazminatı, fazla mesai alacağı, yıllık izin ücreti" veya "Taşınmazın aynen taksimi ve ortaklığın giderilmesi" veya "Faturaya dayalı ticari alacak")
-4. buroAdi: Arabuluculuk bürosu adı (ör: "İstanbul Arabuluculuk Bürosu", "Ankara Arabuluculuk Bürosu")
-5. buroDosyaNo: Büro dosya numarası (ör: "2026/1234")
-6. arabuluculukDosyaNo: Arabuluculuk dosya numarası (ör: "2026/567")
-7. basvuruTarihi: Başvuru tarihi (GG.AA.YYYY formatında)
-8. gorevlendirmeTarihi: Görevlendirme tarihi (varsa)
+3. disputeSubject: Metindeki uyuşmazlık konusu veya talepler (metinde yoksa "")
+4. buroAdi: Arabuluculuk bürosu adı (metinde yoksa "")
+5. buroDosyaNo: Büro dosya numarası (metinde yoksa "")
+6. arabuluculukDosyaNo: Arabuluculuk dosya numarası (metinde yoksa "")
+7. basvuruTarihi: Başvuru tarihi (metinde yoksa "")
+8. gorevlendirmeTarihi: Görevlendirme tarihi (metinde yoksa "")
 9. basvurucu:
-   - adSoyadUnvan: Başvurucu / Talep eden adı soyadı veya şirket unvanı
-   - tcVkn: TC Kimlik No veya Vergi Kimlik No
-   - adres: Adresi
-   - telefon: Telefonu (varsa)
-   - eposta: E-postası (varsa)
-   - vekilAdi: Vekil (Avukat) Adı Soyadı (varsa)
-   - vekilBaro: Kayıtlı olduğu Baro (ör: "İstanbul")
-   - vekilBaroSicilNo: Baro sicil numarası (varsa)
-   - vekilAdres: Vekil adresi
+   - adSoyadUnvan: Başvurucu adı soyadı veya unvanı (metinde yoksa "")
+   - tcVkn: TC Kimlik No veya Vergi Kimlik No (metinde yoksa "")
+   - adres: Adresi (metinde yoksa "")
+   - telefon: Telefonu (metinde yoksa "")
+   - eposta: E-postası (metinde yoksa "")
+   - vekilAdi: Vekil Adı Soyadı (metinde yoksa "")
+   - vekilBaro: Kayıtlı olduğu Baro (metinde yoksa "")
+   - vekilBaroSicilNo: Baro sicil numarası (metinde yoksa "")
+   - vekilAdres: Vekil adresi (metinde yoksa "")
 10. karsiTaraf:
-   - adSoyadUnvan: Karşı taraf / Muhatap adı soyadı veya şirket unvanı
-   - tcVkn: TC Kimlik No veya Vergi Kimlik No
-   - adres: Adresi
-   - telefon: Telefonu (varsa)
-   - eposta: E-postası (varsa)
-   - vekilAdi: Vekil (Avukat) Adı Soyadı (varsa)
-   - vekilBaro: Kayıtlı olduğu Baro
-   - vekilBaroSicilNo: Baro sicil numarası
-   - vekilAdres: Vekil adresi
+   - adSoyadUnvan: Karşı taraf adı soyadı veya unvanı (metinde yoksa "")
+   - tcVkn: TC Kimlik No veya Vergi Kimlik No (metinde yoksa "")
+   - adres: Adresi (metinde yoksa "")
+   - telefon: Telefonu (metinde yoksa "")
+   - eposta: E-postası (metinde yoksa "")
+   - vekilAdi: Vekil Adı Soyadı (metinde yoksa "")
+   - vekilBaro: Kayıtlı olduğu Baro (metinde yoksa "")
+   - vekilBaroSicilNo: Baro sicil numarası (metinde yoksa "")
+   - vekilAdres: Vekil adresi (metinde yoksa "")
 11. arabulucu:
-   - adSoyad: Görevli Arabulucu Adı Soyadı
-   - sicilNo: Arabuluculuk Sicil Numarası (ADB sicili)
-   - iletisim: Telefon / E-posta
-   - adres: Çalışma adresi
-12. toplantiTarihi: Toplantı tarihi (metinde belirtilmişse veya boş ise bugünden 7 gün sonrası için öneri)
-13. toplantiSaati: Toplantı saati (örn: "14:00")
-14. toplantiYeri: Toplantı yeri (ör: "Arabuluculuk Bürosu Toplantı Salonu" veya "Arabulucu Çalışma Ofisi")
-
-Eğer bir bilgi metinde kesinlikle yer almıyorsa boş string ("") bırak. Tahmin yapma, ancak uyuşmazlık türü için metindeki taleplerden (ör: kıdem/ihbar -> is_hukuku, kira -> kira_tasinmaz) doğru sınıflandırmayı yap.`;
+   - adSoyad: Görevli Arabulucu Adı Soyadı (metinde yoksa "")
+   - sicilNo: Arabuluculuk Sicil Numarası (metinde yoksa "")
+   - iletisim: Telefon / E-posta (metinde yoksa "")
+   - adres: Çalışma adresi (metinde yoksa "")
+12. toplantiTarihi: Toplantı tarihi (metinde açıkça belirtilmişse yaz, yoksa "")
+13. toplantiSaati: Toplantı saati (metinde açıkça belirtilmişse yaz, yoksa "")
+14. toplantiYeri: Toplantı yeri (metinde açıkça belirtilmişse yaz, yoksa "")`;
 
     const contents: Array<string | { text?: string; inlineData?: { mimeType: string; data: string } }> = [];
 

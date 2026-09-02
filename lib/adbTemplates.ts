@@ -24,31 +24,31 @@ export function getDisputeTypeLabel(type: DisputeType | string): string {
   }
 }
 
-export function formatSafe(value: string | undefined, placeholder: string): string {
-  return value && value.trim().length > 0 ? value.trim() : `[${placeholder}]`;
+export function formatSafe(value: string | undefined, _placeholder?: string): string {
+  return value && value.trim().length > 0 ? value.trim() : '....';
 }
 
 // 1. DAVET MEKTUBU (ADB RESMİ ŞABLONU - TÜM DOSYA TÜRLERİNE ÖZEL)
 export function generateDavetMektubu(data: MediationCaseData): GeneratedDocument {
-  const buroAdi = formatSafe(data.buroAdi, 'Arabuluculuk Bürosu');
-  const buroDosyaNo = formatSafe(data.buroDosyaNo, 'Büro Dosya No');
-  const arabuluculukDosyaNo = formatSafe(data.arabuluculukDosyaNo, 'Arabuluculuk Dosya No');
-  const basvuruTarihi = formatSafe(data.basvuruTarihi, 'Başvuru Tarihi');
+  const buroAdi = formatSafe(data.buroAdi);
+  const buroDosyaNo = formatSafe(data.buroDosyaNo);
+  const arabuluculukDosyaNo = formatSafe(data.arabuluculukDosyaNo);
+  const basvuruTarihi = formatSafe(data.basvuruTarihi);
 
-  const basvurucuAdi = formatSafe(data.basvurucu.adSoyadUnvan, 'Başvurucu');
-  const karsiTarafAdi = formatSafe(data.karsiTaraf.adSoyadUnvan, 'Muhatap / Karşı Taraf');
-  const arabulucuAdi = formatSafe(data.arabulucu.adSoyad, 'Arabulucu');
-  const arabulucuSicil = formatSafe(data.arabulucu.sicilNo, 'Sicil No');
+  const basvurucuAdi = formatSafe(data.basvurucu.adSoyadUnvan);
+  const karsiTarafAdi = formatSafe(data.karsiTaraf.adSoyadUnvan);
+  const arabulucuAdi = formatSafe(data.arabulucu.adSoyad);
+  const arabulucuSicil = formatSafe(data.arabulucu.sicilNo);
   
   // İletişim ayrıştırma (varsa telefon/eposta veya ortak iletisim alanı)
-  const arabulucuTel = data.arabulucu.telefon || data.arabulucu.iletisim || '[Telefon]';
-  const arabulucuEmail = data.arabulucu.eposta || (data.arabulucu.iletisim?.includes('@') ? data.arabulucu.iletisim : '[E-posta]');
-  const arabulucuAdres = formatSafe(data.arabulucu.adres, 'Arabulucu Adresi');
+  const arabulucuTel = data.arabulucu.telefon || data.arabulucu.iletisim || '....';
+  const arabulucuEmail = data.arabulucu.eposta || (data.arabulucu.iletisim?.includes('@') ? data.arabulucu.iletisim : '....');
+  const arabulucuAdres = formatSafe(data.arabulucu.adres);
 
-  const toplantiTarihi = formatSafe(data.toplantiTarihi, 'Toplantı Tarihi');
-  const toplantiSaati = formatSafe(data.toplantiSaati, 'Toplantı Saati');
-  const toplantiYeri = formatSafe(data.toplantiYeri, 'Toplantı Adresi / Yeri');
-  const uyuşmazlıkKonusu = formatSafe(data.disputeSubject, 'Uyuşmazlık Konusu');
+  const toplantiTarihi = formatSafe(data.toplantiTarihi);
+  const toplantiSaati = formatSafe(data.toplantiSaati);
+  const toplantiYeri = formatSafe(data.toplantiYeri);
+  const uyuşmazlıkKonusu = formatSafe(data.disputeSubject);
 
   let baslik = '';
   let yasalDayanakParagrafi = '';
