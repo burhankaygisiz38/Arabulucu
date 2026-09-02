@@ -6,6 +6,7 @@ import DocumentUploadSection from '@/components/DocumentUploadSection';
 import CaseDataForm from '@/components/CaseDataForm';
 import DocumentViewer from '@/components/DocumentViewer';
 import AiLegalModal from '@/components/AiLegalModal';
+import Chat from '@/components/Chat';
 import { SAMPLE_CASES } from '@/lib/sampleData';
 import { MediationCaseData, ScenarioType, GeneratedDocument } from '@/types/mediation';
 import { generateAllDocuments } from '@/lib/adbTemplates';
@@ -165,6 +166,9 @@ export default function HomePage() {
         caseData={caseData}
         onInsertClause={handleInsertClause}
       />
+
+      {/* Floating Server-Side AI Chat Assistant */}
+      <Chat />
 
       {/* Footer */}
       <footer className="bg-white border-t border-[#E5E7EB] py-8 px-4 sm:px-6 lg:px-8 text-xs text-slate-700">
