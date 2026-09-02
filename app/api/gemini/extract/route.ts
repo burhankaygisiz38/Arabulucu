@@ -1,17 +1,20 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { NextRequest, NextResponse } from 'next/server';
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
-    },
-  },
-});
-
 export async function POST(req: NextRequest) {
   try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'GEMINI_API_KEY bulunamadı. Lütfen .env.local dosyanızda GEMINI_API_KEY ortam değişkenini tanımlayın.',
+        },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
     const { text, fileData, mimeType } = body;
 
@@ -87,8 +90,17 @@ GÖREV VE KESİN KURALLAR:
       });
     }
 
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'arabulucu-ai-extract',
+        },
+      },
+    });
+
     const response = await ai.models.generateContent({
-      model: 'gemini-3.7-flash',
+      model: 'gemini-2.5-flash',
       contents: contents as unknown as string,
       config: {
         systemInstruction: systemPrompt,

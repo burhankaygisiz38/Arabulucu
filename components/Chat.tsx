@@ -30,6 +30,29 @@ interface ChatProps {
   className?: string;
 }
 
+let idSequence = 0;
+function nextId(prefix: string): string {
+  idSequence += 1;
+  return `${prefix}-${idSequence}`;
+}
+
+function getFormattedTime(): string {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
+}
+
+const INITIAL_MESSAGES: ChatMessage[] = [
+  {
+    id: 'welcome-msg',
+    role: 'assistant',
+    content:
+      'Merhaba! Ben **Arabulucu & Hukuk AI Asistanınızım**.\n\n6325 sayılı Hukuk Uyuşmazlıklarında Arabuluculuk Kanunu, dava şartı / ihtiyari arabuluculuk süreçleri, tutanak maddeleri, ibra metinleri veya arabuluculuk ücret tarifesi hakkında bana soru sorabilirsiniz.',
+    timestamp: 'ADB Asistanı',
+  },
+];
+
 export default function Chat({ initialOpen = false, className = '' }: ChatProps) {
   const [isOpen, setIsOpen] = useState(initialOpen);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -38,15 +61,7 @@ export default function Chat({ initialOpen = false, className = '' }: ChatProps)
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'welcome-msg',
-      role: 'assistant',
-      content:
-        'Merhaba! Ben **Arabulucu & Hukuk AI Asistanınızım**.\n\n6325 sayılı Hukuk Uyuşmazlıklarında Arabuluculuk Kanunu, dava şartı / ihtiyari arabuluculuk süreçleri, tutanak maddeleri, ibra metinleri veya arabuluculuk ücret tarifesi hakkında bana soru sorabilirsiniz.',
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -73,12 +88,12 @@ export default function Chat({ initialOpen = false, className = '' }: ChatProps)
 
     setErrorMessage(null);
 
-    const userMessageId = `user-${Date.now()}`;
+    const userMessageId = nextId('user');
     const newUserMsg: ChatMessage = {
       id: userMessageId,
       role: 'user',
       content: textToSend,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: getFormattedTime(),
     };
 
     const updatedMessages = [...messages, newUserMsg];
@@ -109,10 +124,10 @@ export default function Chat({ initialOpen = false, className = '' }: ChatProps)
       }
 
       const assistantMsg: ChatMessage = {
-        id: `ai-${Date.now()}`,
+        id: nextId('ai'),
         role: 'assistant',
         content: data.message || data.reply || 'Yanıt alınamadı.',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: getFormattedTime(),
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
@@ -142,11 +157,11 @@ export default function Chat({ initialOpen = false, className = '' }: ChatProps)
   const handleClearHistory = () => {
     setMessages([
       {
-        id: `welcome-${Date.now()}`,
+        id: nextId('welcome'),
         role: 'assistant',
         content:
           'Sohbet geçmişi temizlendi. Arabuluculuk mevzuatı veya tutanak oluşturma ile ilgili yeni bir soru sorabilirsiniz.',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: getFormattedTime(),
       },
     ]);
     setErrorMessage(null);
