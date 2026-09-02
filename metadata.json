@@ -1,0 +1,8 @@
+{
+  "name": "ADB Resmi Arabuluculuk Asistanı",
+  "description": "T.C. Adalet Bakanlığı Arabuluculuk Daire Başkanlığı standartlarına ve 6325 sayılı Kanun'a %100 uyumlu evrak üreticisi ve dosya analiz asistanı",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
